@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @default(autoincrement()) @id
+  email String @unique
+  username String @unique
+  avatarUrl String?
+  firstname String?
+  lastname String?
+  bio String?
+  // gender 
+  isAccountSetup Boolean
+  password String
+  creations Novel[]
+}
+
+model Novel {
+  id Int @default(autoincrement()) @id
+  title String
+  coverUrl String?
+  description String
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+}
+
+// enum Gender {
+//   MALE
+//   FEMALE
+// }
+
+model NovelGenre{
+  id Int @default(autoincrement()) @id
+  title String @unique 
+}
