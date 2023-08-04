@@ -6,39 +6,127 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id Int @default(autoincrement()) @id
-  email String @unique
-  username String @unique
-  avatarUrl String?
-  firstname String?
-  lastname String?
-  bio String?
-  // gender 
+  id             Int            @id @default(autoincrement())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  email          String         @unique
+  username       String?         @unique
+  password       String
+  avatarUrl      String?
+  birthdate      DateTime?
+  firstName      String?
+  lastName       String?
+  bio            String?
+  gender         Gender         @default(MALE)
   isAccountSetup Boolean
-  password String
-  creations Novel[]
+  creations      Novel[]
+  library        Library?
+  notifications  Notification[]
+  likes          Like[]
+  comments       Comment[]
+}
+
+model Library {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner     User     @relation(fields: [onwerId], references: [id])
+  onwerId   Int      @unique
+  novels    Novel[]
 }
 
 model Novel {
-  id Int @default(autoincrement()) @id
-  title String
-  coverUrl String?
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  coverUrl    String?
+  title       String
   description String
-  owner User @relation(fields: [ownerId], references: [id])
-  ownerId Int
+  genre       NovelGenre  @default(UNKNOWN)
+  status      NovelStatus @default(DRAFT)
+  owner       User        @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+  chapters    Chapter[]
+  Library     Library[]
+  libraryId   Int?
 }
 
-// enum Gender {
-//   MALE
-//   FEMALE
-// }
+model Chapter {
+  id        Int           @id @default(autoincrement())
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  title     String
+  body      String
+  status    ChapterStatus @default(DRAFT)
+  Novel     Novel?        @relation(fields: [novelId], references: [id])
+  novelId   Int?
+  likes     Like[]
+  comments  Comment[]
+}
 
-model NovelGenre{
-  id Int @default(autoincrement()) @id
-  title String @unique 
+model Notification {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  body      String
+  target    User     @relation(fields: [targetId], references: [id])
+  targetId  Int
+  seen      Boolean
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+  chapter   Chapter  @relation(fields: [chapterId], references: [id])
+  chapterId Int
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  body      String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+  chapter   Chapter  @relation(fields: [chapterId], references: [id])
+  chapterId Int
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum NovelStatus {
+  PUBLISHED
+  DRAFT
+  ARCHIVED
+  BANNED
+}
+
+enum ChapterStatus {
+  PUBLISHED
+  DRAFT
+  ARCHIVED
+  BANNED
+}
+
+enum NovelGenre {
+  UNKNOWN
+  FANTASY
+  HORROR
+  ACTION
+  ADVENTURE
+  TRADITIONAL
+  ROMANCE
 }
