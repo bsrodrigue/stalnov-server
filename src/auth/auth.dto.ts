@@ -7,3 +7,11 @@ export class RegisterDto {
     @IsNotEmpty()
     password: string;
 }
+
+export class LoginDto {
+    @IsEmail()
+    email: string;
+
+    @IsNotEmpty()
+    password: string;
+}

@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { Prisma, User } from "@prisma/client";
 import { PrismaService } from "../prisma.service";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsersService {
@@ -32,9 +33,15 @@ export class UsersService {
 
     async createUser(data: Prisma.UserCreateInput): Promise<User> {
         const user = await this.prisma.user.findUnique({ where: { email: data.email } });
-        if (user) throw new BadRequestException("email already in use");
+        if (user) throw new BadRequestException("email-already-in-use");
 
-        //TODO: Password encryption here
+        const password = data.password;
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+
+        data.password = hash;
+        data.salt = salt;
+
         return this.prisma.user.create({
             data,
         });

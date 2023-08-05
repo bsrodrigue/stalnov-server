@@ -15,8 +15,10 @@ model User {
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   email          String         @unique
-  username       String?         @unique
+  username       String?        @unique
   password       String
+  salt           String?
+  role           UserRole       @default(USER)
   avatarUrl      String?
   birthdate      DateTime?
   firstName      String?
@@ -100,6 +102,12 @@ model Comment {
   ownerId   Int
   chapter   Chapter  @relation(fields: [chapterId], references: [id])
   chapterId Int
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  USER
 }
 
 enum Gender {
