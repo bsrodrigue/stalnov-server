@@ -15,3 +15,14 @@ export class LoginDto {
     @IsNotEmpty()
     password: string;
 }
+
+export class ResetPasswordDto {
+
+}
+
+export class ChangePasswordDto {
+    @IsNotEmpty()
+    oldPassword: string;
+    @IsNotEmpty()
+    password: string;
+}

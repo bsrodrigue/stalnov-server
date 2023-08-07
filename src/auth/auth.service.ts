@@ -31,15 +31,6 @@ export class AuthService {
         }
     }
 
-    // Needs to be authenticated
-    async changePassword(email: string, newPassword: string): Promise<any> {
-        await this.usersService.updateUser({
-            where: { email }, data: {
-                password: newPassword
-            }
-        })
-    }
-
     async createSuperuser(email: string, password: string): Promise<any> {
         const user = await this.usersService.createUser({ email, password, isAccountSetup: false, role: 'ADMIN' });
         const { password: userPassword, ...rest } = user;
@@ -47,5 +38,17 @@ export class AuthService {
         return {
             access_token: await this.jwtService.signAsync(payload)
         }
+    }
+
+    async changePassword(userId: number, oldPassword: string, password: string): Promise<any> {
+        const user = await this.usersService.user({ id: userId })
+        if (!user) throw new NotFoundException("user-not-found");
+        const matches = await bcrypt.compare(oldPassword, user.password);
+        if (!matches) throw new UnauthorizedException("incorrect-password");
+
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+
+        await this.usersService.updateUser({ where: { id: userId }, data: { password: hash } })
     }
 }
