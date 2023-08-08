@@ -11,34 +11,35 @@ datasource db {
 }
 
 model User {
-  id             Int            @id @default(autoincrement())
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  email          String         @unique
-  username       String?        @unique
-  password       String
-  salt           String?
-  role           UserRole       @default(USER)
-  avatarUrl      String?
-  birthdate      DateTime?
-  firstName      String?
-  lastName       String?
-  bio            String?
-  gender         Gender         @default(MALE)
-  isAccountSetup Boolean
-  creations      Novel[]
-  library        Library?
-  notifications  Notification[]
-  likes          Like[]
-  comments       Comment[]
+  id               Int            @id @default(autoincrement())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  email            String         @unique
+  username         String?        @unique
+  password         String
+  salt             String?
+  role             UserRole       @default(USER)
+  avatarUrl        String?
+  birthdate        DateTime?
+  firstName        String?
+  lastName         String?
+  bio              String?
+  gender           Gender         @default(UNKNOWN)
+  isAccountSetup   Boolean
+  creations        Novel[]
+  library          Library?
+  notifications    Notification[]
+  favouriteGenres NovelGenre[]
+  likes            Like[]
+  comments         Comment[]
 }
 
 model Library {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  owner     User     @relation(fields: [onwerId], references: [id])
-  onwerId   Int      @unique
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   Int      @unique
   novels    Novel[]
 }
 
@@ -111,6 +112,7 @@ enum UserRole {
 }
 
 enum Gender {
+  UNKNOWN
   MALE
   FEMALE
 }
