@@ -36,7 +36,7 @@ export class UsersRepository {
         if (user) throw new BadRequestException("email-already-in-use");
 
         const password = data.password;
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(password, salt);
 
         data.password = hash;

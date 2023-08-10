@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
 import { Public } from 'src/app.decorators';
 import { Request } from 'src/types';
 import { ChangeEmailDto, ChangePasswordDto, LoginDto, RegisterDto, ResetPasswordDto } from './auth.dto';
@@ -29,6 +29,7 @@ export class AuthController {
     }
 
     @Post("/changeEmail")
+    @HttpCode(HttpStatus.OK)
     async changeEmail(@Req() request: Request, @Body() changeEmailDto: ChangeEmailDto) {
         const userId = request.jwt.user.id;
         const { email, password } = changeEmailDto;
@@ -36,11 +37,10 @@ export class AuthController {
     }
 
     @Post("/changePassword")
+    @HttpCode(HttpStatus.OK)
     async changePassword(@Req() request: Request, @Body() changePasswordDto: ChangePasswordDto) {
         const userId = request.jwt.user.id;
         const { oldPassword, password } = changePasswordDto;
         await this.authService.changePassword(userId, oldPassword, password);
     }
-
-   
 }

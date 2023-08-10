@@ -46,7 +46,7 @@ export class AuthService {
         const matches = await bcrypt.compare(oldPassword, user.password);
         if (!matches) throw new UnauthorizedException("incorrect-password");
 
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(password, salt);
 
         await this.usersRepository.updateUser({ where: { id: userId }, data: { password: hash } })
