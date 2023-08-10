@@ -37,24 +37,3 @@ export class ChangeEmailDto {
     password: string;
 }
 
-export class SetupAccountDto {
-    @IsNotEmpty()
-    firstName: string;
-
-    @IsNotEmpty()
-    lastName: string;
-
-    @IsNotEmpty()
-    username: string;
-
-    @IsNotEmpty()
-    @IsEnum(Gender)
-    gender: Gender;
-
-    @IsOptional()
-    birthdate?: Date;
-
-    bio?: string;
-    avatarUrl?: string;
-    favouriteGenres?: Array<NovelGenre>;
-}

@@ -1,12 +1,14 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { Public } from 'src/app.decorators';
 import { Request } from 'src/types';
-import { ChangeEmailDto, ChangePasswordDto, LoginDto, RegisterDto, ResetPasswordDto, SetupAccountDto } from './auth.dto';
+import { ChangeEmailDto, ChangePasswordDto, LoginDto, RegisterDto, ResetPasswordDto } from './auth.dto';
 import { AuthService } from './auth.service';
 
 @Controller('api/auth')
 export class AuthController {
-    constructor(private authService: AuthService) { }
+    constructor(
+        private authService: AuthService,
+    ) { }
 
     @Public()
     @Post("/register")
@@ -26,13 +28,6 @@ export class AuthController {
         // return await this.authService.login(loginDto.email, loginDto.password);
     }
 
-    @Post("/changePassword")
-    async changePassword(@Req() request: Request, @Body() changePasswordDto: ChangePasswordDto) {
-        const userId = request.jwt.user.id;
-        const { oldPassword, password } = changePasswordDto;
-        await this.authService.changePassword(userId, oldPassword, password);
-    }
-
     @Post("/changeEmail")
     async changeEmail(@Req() request: Request, @Body() changeEmailDto: ChangeEmailDto) {
         const userId = request.jwt.user.id;
@@ -40,9 +35,12 @@ export class AuthController {
         await this.authService.changeEmail(userId, email, password);
     }
 
-    @Post("/setupAccount")
-    async setupAccount(@Req() request: Request, @Body() setupAccountDto: SetupAccountDto) {
+    @Post("/changePassword")
+    async changePassword(@Req() request: Request, @Body() changePasswordDto: ChangePasswordDto) {
         const userId = request.jwt.user.id;
-        return await this.authService.setupAccount(userId, setupAccountDto);
+        const { oldPassword, password } = changePasswordDto;
+        await this.authService.changePassword(userId, oldPassword, password);
     }
+
+   
 }
