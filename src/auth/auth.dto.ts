@@ -1,5 +1,4 @@
-import { Gender, NovelGenre } from "@prisma/client";
-import { IsEmail, IsNotEmpty, IsEnum, IsOptional } from "class-validator";
+import { IsEmail, IsNotEmpty } from "class-validator";
 
 export class RegisterDto {
     @IsEmail()
