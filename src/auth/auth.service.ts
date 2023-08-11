@@ -1,20 +1,17 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Gender, NovelGenre } from '@prisma/client';
 import * as bcrypt from "bcrypt";
-import { LibraryService } from 'src/library/library.service';
-import { UsersService } from 'src/users/users.service';
+import { UsersRepository } from 'src/users/users.repository';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private usersService: UsersService,
+        private usersRepository: UsersRepository,
         private jwtService: JwtService,
-        private libraryService: LibraryService,
     ) { }
 
     async register(email: string, password: string): Promise<any> {
-        const user = await this.usersService.createUser({ email, password, isAccountSetup: false, role: "USER" });
+        const user = await this.usersRepository.createUser({ email, password, isAccountSetup: false, role: "USER" });
         const { password: userPassword, salt, ...rest } = user;
         const payload = { user: rest };
         return {
@@ -23,7 +20,7 @@ export class AuthService {
     }
 
     async login(email: string, password: string): Promise<any> {
-        const user = await this.usersService.user({ email });
+        const user = await this.usersRepository.user({ email });
         if (!user) throw new NotFoundException("user-not-found");
         const matches = await bcrypt.compare(password, user.password);
         if (!matches) throw new UnauthorizedException("incorrect-password");
@@ -35,7 +32,7 @@ export class AuthService {
     }
 
     async createSuperuser(email: string, password: string): Promise<any> {
-        const user = await this.usersService.createUser({ email, password, isAccountSetup: false, role: 'ADMIN' });
+        const user = await this.usersRepository.createUser({ email, password, isAccountSetup: false, role: 'ADMIN' });
         const { password: userPassword, ...rest } = user;
         const payload = { user: rest };
         return {
@@ -44,59 +41,36 @@ export class AuthService {
     }
 
     async changePassword(userId: number, oldPassword: string, password: string): Promise<any> {
-        const user = await this.usersService.user({ id: userId })
+        const user = await this.usersRepository.user({ id: userId })
         if (!user) throw new NotFoundException("user-not-found");
         const matches = await bcrypt.compare(oldPassword, user.password);
         if (!matches) throw new UnauthorizedException("incorrect-password");
 
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(password, salt);
 
-        await this.usersService.updateUser({ where: { id: userId }, data: { password: hash } })
+        await this.usersRepository.updateUser({ where: { id: userId }, data: { password: hash } })
     }
 
     async changeEmail(userId: number, email: string, password): Promise<any> {
-        const user = await this.usersService.user({ id: userId })
+        const user = await this.usersRepository.user({ id: userId })
         if (!user) throw new NotFoundException("user-not-found");
         const matches = await bcrypt.compare(password, user.password);
         if (!matches) throw new UnauthorizedException("incorrect-password");
 
         if (email === user.email) throw new BadRequestException("cannot-use-previous-email");
 
-        await this.usersService.updateUser({ where: { id: userId }, data: { email } });
+        await this.usersRepository.updateUser({ where: { id: userId }, data: { email } });
     }
 
     async deleteAccount(userId: number, password): Promise<any> {
-        const user = await this.usersService.user({ id: userId })
+        const user = await this.usersRepository.user({ id: userId })
         if (!user) throw new NotFoundException("user-not-found");
         const matches = await bcrypt.compare(password, user.password);
         if (!matches) throw new UnauthorizedException("incorrect-password");
 
-        await this.usersService.deleteUser({ id: userId });
+        await this.usersRepository.deleteUser({ id: userId });
     }
 
-    async setupAccount(userId: number, accountInformations: {
-        firstName: string;
-        lastName: string;
-        username: string;
-        gender: Gender;
-        avatarUrl?: string;
-        favouriteGenres?: Array<NovelGenre>;
-        birthdate?: Date;
-        bio?: string;
 
-    }): Promise<any> {
-        const user = await this.usersService.updateUser({
-            where: { id: userId }, data: {
-                isAccountSetup: true,
-                library: {
-                    create: {}
-                },
-                ...accountInformations
-            }
-        });
-        const { password, salt, ...rest } = user;
-
-        return { user: rest };
-    }
 }

@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { Novel } from '@prisma/client';
 import { AppService } from './app.service';
-import { NovelService } from './novels/novels.service';
+import { NovelService } from './novels/novels.repository';
 import { UsersService } from './users/users.service';
 
 @Controller()

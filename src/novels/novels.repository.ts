@@ -3,7 +3,7 @@ import { Novel, Prisma } from "@prisma/client";
 import { PrismaService } from "src/prisma.service";
 
 @Injectable()
-export class NovelService {
+export class NovelsRepository {
   constructor(private prisma: PrismaService) { }
   async novel(
     novelWhereUniqueInput: Prisma.NovelWhereUniqueInput,
