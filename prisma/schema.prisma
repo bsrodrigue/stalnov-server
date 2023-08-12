@@ -54,6 +54,7 @@ model Novel {
   status      NovelStatus @default(DRAFT)
   owner       User        @relation(fields: [ownerId], references: [id])
   ownerId     Int
+  isMature    Boolean
   chapters    Chapter[]
   Library     Library[]
   libraryId   Int?
