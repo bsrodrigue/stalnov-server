@@ -4,7 +4,7 @@ import { PrismaService } from "src/prisma.service";
 
 @Injectable()
 export class NovelsRepository {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
   async novel(
     novelWhereUniqueInput: Prisma.NovelWhereUniqueInput,
   ): Promise<Novel | null> {
@@ -27,12 +27,44 @@ export class NovelsRepository {
       cursor,
       where,
       orderBy,
+      include: {
+        owner: {
+          select: {
+            id: true,
+            bio: true,
+            role: true,
+            email: true,
+            gender: true,
+            lastName: true,
+            firstName: true,
+            username: true,
+            avatarUrl: true,
+          },
+        },
+        chapters: true,
+      },
     });
   }
 
   async createNovel(data: Prisma.NovelCreateInput): Promise<Novel> {
     return this.prisma.novel.create({
       data,
+      include: {
+        owner: {
+          select: {
+            id: true,
+            bio: true,
+            role: true,
+            email: true,
+            gender: true,
+            lastName: true,
+            firstName: true,
+            username: true,
+            avatarUrl: true,
+          },
+        },
+        chapters: true,
+      },
     });
   }
 
@@ -44,6 +76,22 @@ export class NovelsRepository {
     return this.prisma.novel.update({
       data,
       where,
+      include: {
+        owner: {
+          select: {
+            id: true,
+            bio: true,
+            role: true,
+            email: true,
+            gender: true,
+            lastName: true,
+            firstName: true,
+            username: true,
+            avatarUrl: true,
+          },
+        },
+        chapters: true,
+      },
     });
   }
 
