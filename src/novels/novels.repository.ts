@@ -39,6 +39,16 @@ export class NovelsRepository {
             firstName: true,
             username: true,
             avatarUrl: true,
+            creations: {
+              where: {
+                status: "PUBLISHED",
+              },
+
+              select: {
+                id: true,
+                title: true,
+              },
+            },
           },
         },
         chapters: true,
