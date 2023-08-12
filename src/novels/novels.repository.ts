@@ -28,9 +28,21 @@ export class NovelsRepository {
       where,
       orderBy,
       include: {
-        owner: true,
+        owner: {
+          select: {
+            id: true,
+            bio: true,
+            role: true,
+            email: true,
+            gender: true,
+            lastName: true,
+            firstName: true,
+            username: true,
+            avatarUrl: true,
+          },
+        },
         chapters: true,
-      }
+      },
     });
   }
 
@@ -38,7 +50,19 @@ export class NovelsRepository {
     return this.prisma.novel.create({
       data,
       include: {
-        owner: true,
+        owner: {
+          select: {
+            id: true,
+            bio: true,
+            role: true,
+            email: true,
+            gender: true,
+            lastName: true,
+            firstName: true,
+            username: true,
+            avatarUrl: true,
+          },
+        },
         chapters: true,
       },
     });
@@ -53,9 +77,21 @@ export class NovelsRepository {
       data,
       where,
       include: {
-        owner: true,
+        owner: {
+          select: {
+            id: true,
+            bio: true,
+            role: true,
+            email: true,
+            gender: true,
+            lastName: true,
+            firstName: true,
+            username: true,
+            avatarUrl: true,
+          },
+        },
         chapters: true,
-      }
+      },
     });
   }
 
