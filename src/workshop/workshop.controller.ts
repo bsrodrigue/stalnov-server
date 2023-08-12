@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req } from "@nestjs/common";
 import { WorkshopService } from "./workshop.service";
 import { Request } from "src/types";
 import {
@@ -23,7 +23,7 @@ export class WorkshopController {
   @Post("/createNovel")
   async createNovel(
     @Req() { jwt: { user: { id } } }: Request,
-    dto: CreateNovelDto,
+    @Body() dto: CreateNovelDto,
   ) {
     const payload = dto;
     return await this.workshopService.createNovel(id, payload);
@@ -32,7 +32,7 @@ export class WorkshopController {
   @Post("/updateNovel")
   async updateNovel(
     @Req() { jwt: { user: { id } } }: Request,
-    dto: UpdateNovelDto,
+    @Body() dto: UpdateNovelDto,
   ) {
     const { novelId, ...payload } = dto;
     return await this.workshopService.updateNovel(id, novelId, payload);
@@ -41,7 +41,7 @@ export class WorkshopController {
   @Post("/createChapter")
   async createChapter(
     @Req() { jwt: { user: { id } } }: Request,
-    dto: CreateChapterDto,
+    @Body() dto: CreateChapterDto,
   ) {
     const { novelId, ...payload } = dto;
     return await this.workshopService.createChapter(id, novelId, payload);
@@ -50,7 +50,7 @@ export class WorkshopController {
   @Post("/updateChapter")
   async updateChapter(
     @Req() { jwt: { user: { id } } }: Request,
-    dto: UpdateChapterDto,
+    @Body() dto: UpdateChapterDto,
   ) {
     const { chapterId, ...payload } = dto;
     return await this.workshopService.updateChapter(id, chapterId, payload);
