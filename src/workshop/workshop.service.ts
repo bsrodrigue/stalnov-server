@@ -45,6 +45,13 @@ export class WorkshopService {
     return novel;
   }
 
+  async deleteNovel(
+    userId: number,
+    novelId: number,
+  ) {
+    await this.novelsRepository.deleteNovel({ id: novelId, ownerId: userId });
+  }
+
   async createChapter(
     userId: number,
     novelId: number,
@@ -75,5 +82,15 @@ export class WorkshopService {
     });
 
     return chapter;
+  }
+
+  async deleteChapter(
+    userId: number,
+    chapterId: number,
+  ) {
+    await this.chaptersRepository.deleteChapter({
+      id: chapterId,
+      novel: { ownerId: userId },
+    });
   }
 }

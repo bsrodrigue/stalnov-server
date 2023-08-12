@@ -52,7 +52,7 @@ model Novel {
   description String
   genre       NovelGenre  @default(UNKNOWN)
   status      NovelStatus @default(DRAFT)
-  owner       User        @relation(fields: [ownerId], references: [id])
+  owner       User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId     Int
   isMature    Boolean
   chapters    Chapter[]
@@ -67,7 +67,7 @@ model Chapter {
   title     String
   body      String
   status    ChapterStatus @default(DRAFT)
-  novel     Novel?        @relation(fields: [novelId], references: [id])
+  novel     Novel?        @relation(fields: [novelId], references: [id], onDelete: Cascade)
   novelId   Int?
   likes     Like[]
   comments  Comment[]

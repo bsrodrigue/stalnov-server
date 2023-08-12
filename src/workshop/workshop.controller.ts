@@ -4,6 +4,8 @@ import { Request } from "src/types";
 import {
   CreateChapterDto,
   CreateNovelDto,
+  DeleteChapterDto,
+  DeleteNovelDto,
   UpdateChapterDto,
   UpdateNovelDto,
 } from "./workshop.dto";
@@ -38,6 +40,15 @@ export class WorkshopController {
     return await this.workshopService.updateNovel(id, novelId, payload);
   }
 
+  @Post("/deleteNovel")
+  async deleteNovel(
+    @Req() { jwt: { user: { id } } }: Request,
+    @Body() dto: DeleteNovelDto,
+  ) {
+    const { novelId } = dto;
+    return await this.workshopService.deleteNovel(id, novelId);
+  }
+
   @Post("/createChapter")
   async createChapter(
     @Req() { jwt: { user: { id } } }: Request,
@@ -54,5 +65,14 @@ export class WorkshopController {
   ) {
     const { chapterId, ...payload } = dto;
     return await this.workshopService.updateChapter(id, chapterId, payload);
+  }
+
+  @Post("/deleteChapter")
+  async deleteChapter(
+    @Req() { jwt: { user: { id } } }: Request,
+    @Body() dto: DeleteChapterDto,
+  ) {
+    const { chapterId } = dto;
+    return await this.workshopService.deleteChapter(id, chapterId);
   }
 }

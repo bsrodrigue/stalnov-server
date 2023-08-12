@@ -63,3 +63,13 @@ export class UpdateChapterDto {
   @IsOptional()
   body: string;
 }
+
+export class DeleteNovelDto {
+  @IsNotEmpty()
+  novelId: number;
+}
+
+export class DeleteChapterDto {
+  @IsNotEmpty()
+  chapterId: number;
+}
