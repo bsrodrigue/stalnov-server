@@ -51,6 +51,9 @@ export class CreateChapterDto {
 
   @IsNotEmpty()
   body: string;
+
+  @IsOptional()
+  order: number;
 }
 
 export class UpdateChapterDto {
@@ -62,6 +65,9 @@ export class UpdateChapterDto {
 
   @IsOptional()
   body: string;
+
+  @IsOptional()
+  order: number;
 }
 
 export class DeleteNovelDto {

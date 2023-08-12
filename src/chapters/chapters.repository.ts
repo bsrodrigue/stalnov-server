@@ -10,6 +10,10 @@ export class ChaptersRepository {
   ): Promise<Chapter | null> {
     return this.prisma.chapter.findUnique({
       where: chapterWhereUniqueInput,
+      include: {
+        likes: true,
+        comments: true,
+      }
     });
   }
 
@@ -27,12 +31,20 @@ export class ChaptersRepository {
       cursor,
       where,
       orderBy,
+      include: {
+        likes: true,
+        comments: true,
+      }
     });
   }
 
   async createChapter(data: Prisma.ChapterCreateInput): Promise<Chapter> {
     return this.prisma.chapter.create({
       data,
+      include: {
+        likes: true,
+        comments: true,
+      }
     });
   }
 
@@ -44,6 +56,10 @@ export class ChaptersRepository {
     return this.prisma.chapter.update({
       data,
       where,
+      include: {
+        likes: true,
+        comments: true,
+      }
     });
   }
 

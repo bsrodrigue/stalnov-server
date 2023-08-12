@@ -66,6 +66,7 @@ model Chapter {
   updatedAt DateTime      @updatedAt
   title     String
   body      String
+  order       Int         @default(0)
   status    ChapterStatus @default(DRAFT)
   novel     Novel?        @relation(fields: [novelId], references: [id], onDelete: Cascade)
   novelId   Int?
