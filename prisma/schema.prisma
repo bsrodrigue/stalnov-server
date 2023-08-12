@@ -66,7 +66,7 @@ model Chapter {
   title     String
   body      String
   status    ChapterStatus @default(DRAFT)
-  Novel     Novel?        @relation(fields: [novelId], references: [id])
+  novel     Novel?        @relation(fields: [novelId], references: [id])
   novelId   Int?
   likes     Like[]
   comments  Comment[]
