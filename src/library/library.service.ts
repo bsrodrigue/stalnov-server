@@ -1,16 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { LibraryRepository } from "./library.repository";
 
 @Injectable()
 export class LibraryService {
-    constructor(
-        private prismaService: PrismaService,
-    ) { }
+  constructor(
+    private libraryRepository: LibraryRepository,
+  ) {}
 
-    async createLibrary(data: Prisma.LibraryCreateInput) {
-        return this.prismaService.library.create({
-            data
-        });
-    }
+  async getUserLibrary(userId: number) {
+    return await this.libraryRepository.library({
+      ownerId: userId,
+    });
+  }
+
+  async addToLibrary(userId: number, novelId: number) {
+    await this.libraryRepository.updateLibrary({
+      where: {
+        ownerId: userId,
+      },
+
+      data: {
+        novels: { connect: { id: novelId } },
+      },
+    });
+  }
+
+  async removeFromLibrary(userId: number, novelId: number) {
+    await this.libraryRepository.updateLibrary({
+      where: {
+        ownerId: userId,
+      },
+
+      data: {
+        novels: { disconnect: { id: novelId } },
+      },
+    });
+  }
 }

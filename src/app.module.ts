@@ -1,7 +1,5 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
 import { NovelsModule } from "./novels/novels.module";
 import { PrismaService } from "./prisma.service";
@@ -19,7 +17,7 @@ import { WorkshopModule } from "./workshop/workshop.module";
     LibraryModule,
     WorkshopModule,
   ],
-  controllers: [AppController],
-  providers: [PrismaService, AppService, UsersService],
+  controllers: [],
+  providers: [PrismaService, UsersService],
 })
 export class AppModule {}

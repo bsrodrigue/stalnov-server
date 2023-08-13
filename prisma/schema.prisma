@@ -56,8 +56,7 @@ model Novel {
   ownerId     Int
   isMature    Boolean
   chapters    Chapter[]
-  Library     Library[]
-  libraryId   Int?
+  libraries   Library[]
 }
 
 model Chapter {
@@ -141,4 +140,8 @@ enum NovelGenre {
   ADVENTURE
   TRADITIONAL
   ROMANCE
+  DRAMA
+  HISTORICAL
+  SCIFI
+  MYSTERY
 }
