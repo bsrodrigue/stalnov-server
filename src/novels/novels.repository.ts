@@ -42,6 +42,7 @@ export class NovelsRepository {
             creations: {
               where: {
                 status: "PUBLISHED",
+                chapters: { every: { status: "PUBLISHED" } },
               },
 
               select: {

@@ -33,4 +33,21 @@ export class NovelsController {
 
     return novels.filter((novel) => !novel.isMature);
   }
+
+  @Get("/author/:id")
+  async getAuthorNovels(@Req() req: Request) {
+    const authorId = parseInt(req.params.id);
+    const birthdate = req.jwt.user.birthdate;
+    const birthdateString = new Date(birthdate).toString();
+    const age = getAge(birthdateString);
+    const isMature = age >= 18;
+
+    const novels = await this.novelsService.getPublicAuthorNovels(authorId);
+
+    if (isMature) {
+      return novels;
+    }
+
+    return novels.filter((novel) => !novel.isMature);
+  }
 }
