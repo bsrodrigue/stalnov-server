@@ -36,4 +36,21 @@ export class NovelsService {
 
     return novels;
   }
+
+  async searchNovel(searchTerms: string) {
+    const novels = await this.novelsRepository.novels({
+      where: {
+        title: {
+          contains: searchTerms,
+        },
+        status: "PUBLISHED",
+        chapters: { every: { status: "PUBLISHED" } },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    return novels;
+  }
 }

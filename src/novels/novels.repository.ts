@@ -52,7 +52,12 @@ export class NovelsRepository {
             },
           },
         },
-        chapters: true,
+        chapters: {
+          include: {
+            likes: true,
+            comments: true,
+          }
+        },
       },
     });
   }
