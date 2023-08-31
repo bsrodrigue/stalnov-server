@@ -55,6 +55,7 @@ export class NovelsRepository {
         chapters: {
           include: {
             likes: true,
+            reads: true,
             comments: true,
           }
         },

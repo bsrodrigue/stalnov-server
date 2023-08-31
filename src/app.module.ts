@@ -8,6 +8,7 @@ import { UsersService } from "./users/users.service";
 import { LibraryModule } from "./library/library.module";
 import { WorkshopModule } from "./workshop/workshop.module";
 import { LikesModule } from "./likes/likes.module";
+import { ReadsModule } from "./reads/reads.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LikesModule } from "./likes/likes.module";
     LibraryModule,
     WorkshopModule,
     LikesModule,
+    ReadsModule,
   ],
   controllers: [],
   providers: [PrismaService, UsersService],

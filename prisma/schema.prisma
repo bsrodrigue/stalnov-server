@@ -8,30 +8,32 @@ generator client {
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id               Int            @id @default(autoincrement())
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  email            String         @unique
-  username         String?        @unique
-  password         String
-  salt             String?
-  role             UserRole       @default(USER)
-  avatarUrl        String?
-  birthdate        DateTime?
-  firstName        String?
-  lastName         String?
-  bio              String?
-  gender           Gender         @default(UNKNOWN)
-  isAccountSetup   Boolean
-  creations        Novel[]
-  library          Library?
-  notifications    Notification[]
+  id              Int            @id @default(autoincrement())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  email           String         @unique
+  username        String?        @unique
+  password        String
+  salt            String?
+  role            UserRole       @default(USER)
+  avatarUrl       String?
+  birthdate       DateTime?
+  firstName       String?
+  lastName        String?
+  bio             String?
+  gender          Gender         @default(UNKNOWN)
+  isAccountSetup  Boolean
+  creations       Novel[]
+  library         Library?
+  notifications   Notification[]
   favouriteGenres NovelGenre[]
-  likes            Like[]
-  comments         Comment[]
+  likes           Like[]
+  comments        Comment[]
+  reads           Read[]
 }
 
 model Library {
@@ -65,12 +67,13 @@ model Chapter {
   updatedAt DateTime      @updatedAt
   title     String
   body      String
-  order       Int         @default(0)
+  order     Int           @default(0)
   status    ChapterStatus @default(DRAFT)
   novel     Novel?        @relation(fields: [novelId], references: [id], onDelete: Cascade)
   novelId   Int?
   likes     Like[]
   comments  Comment[]
+  reads     Read[]
 }
 
 model Notification {
@@ -85,6 +88,16 @@ model Notification {
 }
 
 model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+  chapter   Chapter  @relation(fields: [chapterId], references: [id])
+  chapterId Int
+}
+
+model Read {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

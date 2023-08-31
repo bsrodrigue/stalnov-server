@@ -7,7 +7,7 @@ export class NovelsService {
     private novelsRepository: NovelsRepository,
   ) {}
 
-  async getPublicNovels() {
+  async getPublicNovels(pageSize?: number, cursor?: number) {
     const novels = await this.novelsRepository.novels({
       where: {
         status: "PUBLISHED",
@@ -16,6 +16,13 @@ export class NovelsService {
       orderBy: {
         updatedAt: "desc",
       },
+      take: pageSize,
+      cursor: cursor
+        ? {
+          id: cursor,
+        }
+        : undefined,
+      skip: cursor ? 1 : 0,
     });
 
     return novels;
